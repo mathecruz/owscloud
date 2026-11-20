@@ -1,0 +1,42 @@
+document:
+  dsl: 1.0.3
+  namespace: default
+  name: dynamodb-put-item
+  version: 0.1.0
+use:
+  functions:
+    aws-dynamodb-putitem:
+      call: http
+      with:
+        method: post
+        endpoint: http://localhost:4566/
+        headers:
+          Content-Type: application/x-amz-json-1.0
+          X-Amz-Target: DynamoDB_20120810.PutItem
+        body: "${ . }"
+do:
+- SaveParent:
+    try:
+    - Save:
+        output:
+          as: "${ $task.rawInput }"
+        call: aws-dynamodb-putitem
+        with:
+          TableName: orders
+          Item:
+            id:
+              S: "${ .id }"
+            total:
+              "N": "${ .total }"
+    catch:
+      errors:
+        with:
+          type: https://asl2ows.invalid/errors/DynamoDB.ProvisionedThroughputExceededException
+      as: error
+      retry:
+        delay: PT0.5S
+        backoff:
+          exponential: {}
+        limit:
+          attempt:
+            count: 3

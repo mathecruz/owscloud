@@ -1,0 +1,27 @@
+document:
+  dsl: 1.0.3
+  namespace: default
+  name: pass-and-data-flow
+  version: 0.1.0
+  summary: Pass states and JSONPath data flow
+do:
+  - Seed:
+      output:
+        as: "${ (.) as $r | $task.rawInput | setpath([\"meta\"]; $r) }"
+      set:
+        count: 0
+        note: "${ \"price is ${x}\" }"
+  - Shape:
+      input:
+        from: "${ .order }"
+      set:
+        id: "${ .id }"
+        items: "${ [.lines[].sku] }"
+        source: web
+        exec: "${ $workflow.id }"
+  - Trim:
+      output:
+        as: "${ (.) | .items }"
+      set: "${ . }"
+  - Done:
+      set: "${ . }"
