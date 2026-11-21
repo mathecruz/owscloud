@@ -4,15 +4,18 @@ document:
   name: dynamodb-put-item
   version: 0.1.0
 use:
+  secrets:
+  - aws
   functions:
     aws-dynamodb-putitem:
       call: http
       with:
         method: post
-        endpoint: http://localhost:4566/
+        endpoint: "${ $secret.aws.dynamodb.endpoint }"
         headers:
           Content-Type: application/x-amz-json-1.0
           X-Amz-Target: DynamoDB_20120810.PutItem
+          X-Aws-SigV4-Service: dynamodb
         body: "${ . }"
 do:
 - SaveParent:

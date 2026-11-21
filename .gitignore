@@ -43,3 +43,28 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+
+# Terraform
+# Keep *.tf and .terraform.lock.hcl (provider versions and checksums) under version control.
+# Providers and modules downloaded by terraform init
+**/.terraform/*
+# State and backups: contain resource attributes in plain text, including secrets
+*.tfstate
+*.tfstate.*
+# Saved plans: contain the full configuration and variable values, including secrets
+*.tfplan
+tfplan
+# Variable files: usually hold credentials and environment-specific values
+*.tfvars
+*.tfvars.json
+# Local overrides of the shared configuration
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+# CLI configuration: may contain registry/Terraform Cloud API tokens
+.terraformrc
+terraform.rc
+# Crash logs: may contain sensitive data
+crash.log
+crash.*.log
